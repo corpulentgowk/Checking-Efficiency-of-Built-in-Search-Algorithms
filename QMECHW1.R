@@ -48,6 +48,7 @@ while( length(treatment0) < minTries || length(treatment1) < minTries ) {
   treatmentOp <- round(runif(1, min = 0, max = 1))
   
   if (treatmentOp == 0) {
+    treatment1Test <- "OPN"
     #Run RightHand Matrix on Functions
     results0 <- subjectFunc0(rightHand)
     results1 <- subjectFunc1(rightHand)
@@ -57,11 +58,12 @@ while( length(treatment0) < minTries || length(treatment1) < minTries ) {
       treatment0 <-c(treatment0,1) #keeps track of whether manual was faster or not on treatment0
     }
     else{
-      alldata <-c(allData, 0) #This means that the built in function was faster.
+      allData <-c(allData, 0) #This means that the built in function was faster.
       treatment0 <-c(treatment0,0) #keeps track of whether manual was faster or not on treatment0
     }
-}
+  }
   else {
+    treatment2Test <- "OPN"
     results2 <- subjectFunc0(leftHand)
     results3 <- subjectFunc1(leftHand)
     if(results2 <= results3){
@@ -69,7 +71,7 @@ while( length(treatment0) < minTries || length(treatment1) < minTries ) {
       treatment1 <-c(treatment1,1) #keeps track of whether manual was faster or not on treatment1
     }
     else{
-      alldata <-c(allData, 0) #This means that the built in function was faster.
+      allData <-c(allData, 0) #This means that the built in function was faster.
       treatment1 <-c(treatment1,0) #keeps track of whether manual was faster or not on treatment1
     }
   }
