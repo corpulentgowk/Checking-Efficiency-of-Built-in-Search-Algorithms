@@ -22,8 +22,8 @@ minTries <- 25;
 subjectFunc0 <- function(treat){
   start <- Sys.time()
   vals <- c()
-  for(i in 1:numCols){
-    for(j in 1:numRows){
+  for(i in 1:numRows){
+    for(j in 1:numCols){
       if(treat[i,j] > valBound){
         vals <- c(vals,treat[i,j])
       }
@@ -36,7 +36,13 @@ subjectFunc0 <- function(treat){
 subjectFunc1 <- function(treat){
   start <- Sys.time()
   vals <- c()
-  vals <- treat[treat > valBound]
+  for(i in 1:numCols){
+    for(j in 1:numRows){
+      if(treat[j,i] > valBound){
+        vals <- c(vals,treat[i,j])
+      }
+    }
+  }
   end <-Sys.time()
   return(end - start) 
 } 
