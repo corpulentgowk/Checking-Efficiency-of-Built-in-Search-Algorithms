@@ -50,9 +50,10 @@ while( length(treatment0) < minTries || length(treatment1) < minTries ) {
   if (treatmentOp == 0) {
     #Run RightHand Matrix on Functions
     results0 <- subjectFunc0(rightHand)
-    result1 <- subjectFunc1(rightHand)
-    if(results0 < results1){
+    results1 <- subjectFunc1(rightHand)
+    if(results0 <= results1){
       allData <-c(allData, 1) #This means that manual search was faster.
+      test <- "wtf"
       treatment0 <-c(treatment0,1) #keeps track of whether manual was faster or not on treatment0
     }
     else{
@@ -62,8 +63,8 @@ while( length(treatment0) < minTries || length(treatment1) < minTries ) {
 }
   else {
     results2 <- subjectFunc0(leftHand)
-    result3 <- subjectFunc1(leftHand)
-    if(results2 < results3){
+    results3 <- subjectFunc1(leftHand)
+    if(results2 <= results3){
       allData <-c(allData, 1) #This means that manual search was faster.
       treatment1 <-c(treatment1,1) #keeps track of whether manual was faster or not on treatment1
     }
