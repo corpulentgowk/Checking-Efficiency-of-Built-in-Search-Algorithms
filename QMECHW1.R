@@ -1,11 +1,12 @@
-#Step 1: Generate uniformly distributed matrix 
-#containing values from 0-10 (inclusive)
+#Set some basic variables
 numRows <- 5;
 numCols <- 5;
 valBound <- 5;
 
-treatment1 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #right hand matrix
-treatment2 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #left hand matrix (goes with our analogy)
+#Generate uniformly distributed matrix 
+#containing values from 0-10 (inclusive)
+treatment1 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) 
+treatment2 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols))
 
 #Setup variables for storing treatment data
 treatment1Results <- c();
@@ -17,7 +18,7 @@ treatmentOrder <- c();
 minTries <- 25;
 
 #Create two different options for finding all of the values 
-#in a matrix that is greater than 5
+#in a matrix that are greater than 5
 subjectFunc0 <- function(treat){
   start <- Sys.time()
   vals <- c()
@@ -52,7 +53,7 @@ while( length(treatment1Results) < minTries || length(treatment2Results) < minTr
   treatmentOp <- round(runif(1, min = 0, max = 1))
   
   #Alternation variable is used to switch the order of the operand
-  #in order to help remove bias.
+  #to help remove bias.
   alternation = length(allData) %% 2
   
   if (treatmentOp == 0) {
@@ -76,7 +77,7 @@ while( length(treatment1Results) < minTries || length(treatment2Results) < minTr
     }
   }
   else {
-    #Run treatment1 Matrix on Functions
+    #Run treatment2 Matrix on Functions
     if(alternation == 0) {
       results2 <- subjectFunc0(treatment2)
       results3 <- subjectFunc1(treatment2)
@@ -94,12 +95,18 @@ while( length(treatment1Results) < minTries || length(treatment2Results) < minTr
       treatment2Results <-c(treatment2Results,0) #keeps track of whether column-wise was faster or not on treatment2
     }
   }
-  treatmentOrder <- c(treatmentOrder, treatmentOp) #Keeps track of which hand was used to shoot the ball
+  if(treatmentOp == 1) {
+    treatmentOrder <- c(treatmentOrder, "Matrix 2")
+  }
+  else {
+    treatmentOrder <- c(treatmentOrder, "Matrix 1")
+  }
+  
 }
 
 #Output the data to a CSV
 output.data <- data.frame(treatmentOrder, allData)
-names(output.data)[1] <- "Treatment Order"
-names(output.data)[2] <- "Time to Complete Operation"
+names(output.data)[1] <- "Treatment"
+names(output.data)[2] <- "Row-Wise(1)/Column-Wise(0) Faster"
 write.csv(output.data, file = "QMECHW1.csv")
 
