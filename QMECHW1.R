@@ -1,16 +1,15 @@
 #Step 1: Generate uniformly distributed matrix 
 #containing values from 0-10 (inclusive)
-
 numRows <- 5;
 numCols <- 5;
 valBound <- 5;
 
-rightHand <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #right hand matrix
-leftHand <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #left hand matrix (goes with our analogy)
+treatment1 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #right hand matrix
+treatment2 <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #left hand matrix (goes with our analogy)
 
 #Setup variables for storing treatment data
-treatment0 <- c();
-treatment1 <- c();
+treatment1Results <- c();
+treatment2Results <- c();
 allData <- c();
 treatmentOrder <- c();
 
@@ -47,38 +46,52 @@ subjectFunc1 <- function(treat){
   return(end - start) 
 } 
 
-
 #Run until there is at least minTries data collected for each treatment
-while( length(treatment0) < minTries || length(treatment1) < minTries ) {
+while( length(treatment1Results) < minTries || length(treatment2Results) < minTries ) {
   #Method for choosing random treatment
   treatmentOp <- round(runif(1, min = 0, max = 1))
   
+  #Alternation variable is used to switch the order of the operand
+  #in order to help remove bias.
+  alternation = length(allData) %% 2
+  
   if (treatmentOp == 0) {
-    treatment1Test <- "OPN"
-    #Run RightHand Matrix on Functions
-    results0 <- subjectFunc0(rightHand)
-    results1 <- subjectFunc1(rightHand)
+    #Run treatment1 Matrix on Functions
+    if(alternation == 0) {
+      results0 <- subjectFunc0(treatment1)
+      results1 <- subjectFunc1(treatment1)
+    }
+    else {
+      results1 <- subjectFunc1(treatment1)
+      results0 <- subjectFunc0(treatment1)
+    }
+    
     if(results0 <= results1){
-      allData <-c(allData, 1) #This means that manual search was faster.
-      test <- "wtf"
-      treatment0 <-c(treatment0,1) #keeps track of whether manual was faster or not on treatment0
+      allData <-c(allData, 1) 
+      treatment1Results <-c(treatment1Results,1) #keeps track of whether row-wise was faster or not on treatment1
     }
     else{
-      allData <-c(allData, 0) #This means that the built in function was faster.
-      treatment0 <-c(treatment0,0) #keeps track of whether manual was faster or not on treatment0
+      allData <-c(allData, 0) 
+      treatment1Results <-c(treatment1Results,0) #keeps track of whether column-wise was faster or not on treatment1
     }
   }
   else {
-    treatment2Test <- "OPN"
-    results2 <- subjectFunc0(leftHand)
-    results3 <- subjectFunc1(leftHand)
-    if(results2 <= results3){
-      allData <-c(allData, 1) #This means that manual search was faster.
-      treatment1 <-c(treatment1,1) #keeps track of whether manual was faster or not on treatment1
+    #Run treatment1 Matrix on Functions
+    if(alternation == 0) {
+      results2 <- subjectFunc0(treatment2)
+      results3 <- subjectFunc1(treatment2)
     }
-    else{
-      allData <-c(allData, 0) #This means that the built in function was faster.
-      treatment1 <-c(treatment1,0) #keeps track of whether manual was faster or not on treatment1
+    else {
+      results3 <- subjectFunc1(treatment2)
+      results2 <- subjectFunc0(treatment2)
+    }
+    if(results2 <= results3) {
+      allData <-c(allData, 1)
+      treatment2Results <-c(treatment2Results,1) #keeps track of whether row-wise was faster or not on treatment2
+    }
+    else {
+      allData <-c(allData, 0)
+      treatment2Results <-c(treatment2Results,0) #keeps track of whether column-wise was faster or not on treatment2
     }
   }
   treatmentOrder <- c(treatmentOrder, treatmentOp) #Keeps track of which hand was used to shoot the ball
