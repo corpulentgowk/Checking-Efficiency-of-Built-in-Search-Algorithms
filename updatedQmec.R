@@ -3,7 +3,7 @@
 numRows <- 5;
 numCols <- 5;
 valBound <- 5;
-boundary <- .0000002; #Overall boundary. Needs to be tweaked so we can get that good balance. 
+boundary <- 4.007375e-05; #Overall boundary. Needs to be tweaked so we can get that good balance. 
 f <- "Screw Git Bruh"
 subject <- round(matrix(runif(numRows*numCols, min = 0, max = 10), ncol=numCols)) #Single matrix used through all trials
 
@@ -86,3 +86,18 @@ names(output.data)[1] <- "Treatment Order"
 names(output.data)[2] <- "Faster than Boundary"
 write.csv(output.data, file = "QMECHW1.csv")
 
+
+##### Step -1: Choosing a boundary
+##### This portion is commented out, since it
+##### is just used to find a sensible boundary.
+
+# nboot = 1000
+# boundaryTesting1 = numeric(nboot)
+# boundaryTesting2 = numeric(nboot)
+# for(i in 1:1000) {
+#   boundaryTesting1[i] = treatmentFunc1(subject)
+#   boundaryTesting2[i] = treatmentFunc2(subject)
+# }
+# m1 = mean(boundaryTesting1)
+# m2 = mean(boundaryTesting2)
+# finalBoundary = mean(c(m1, m2))
